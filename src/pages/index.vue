@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="photo-btn" @click="chooseImage"></div>
-        <scroll-view v-if="faceData">
+        <scroll-view v-if="faceData" class="data">
             <div class="box">
                 <img mode="aspectFit" :src="faceData.imgPath" lazy-load="true">
             </div>
@@ -34,7 +34,7 @@
                 <span>{{faceData.beauty}}</span>
             </div>
         </scroll-view>
-        <canvas canvas-id="drawingCanvas" :style="{width:windowWidth+'px',height:windowHeight+'px'}"></canvas>
+        <canvas class="drawingCanvas" canvas-id="drawingCanvas" :style="{width:windowWidth+'px',height:windowHeight+'px'}"></canvas>
     </div>
 </template>
 
@@ -140,6 +140,20 @@
 </script>
 
 <style scoped lang="less">
+    .drawingCanvas{
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+    }
+    .data{
+       background: transparent;
+    }
+    body{
+        background: transparent;
+    }
     .box {
         width: 100%;
         display: flex;
