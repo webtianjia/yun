@@ -12,7 +12,6 @@
   "keywords": [],
   "author": "tianjia <tianjia@xiuex.com>",
   "license": "ISC",
-
   "devDependencies": {
     "@megalo/entry": "^0.1.1",
     "@megalo/target": "^0.4.10",

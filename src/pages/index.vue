@@ -15,7 +15,7 @@
             </div>
             <div class="face-item">
                 <label>性别：</label>
-                <span>{{faceData.gender>50?"男":"女"}}</span>
+                <span>{{faceData.gender > 50 ? "男" : "女"}}</span>
             </div>
             <div class="face-item">
                 <label>年龄：</label>
@@ -27,14 +27,14 @@
             </div>
             <div class="face-item" v-if="faceData.glass">
                 <label>是否有眼镜：</label>
-                <span>{{faceData.glass?"Yes":"No"}}</span>
+                <span>{{faceData.glass ? "Yes" : "No"}}</span>
             </div>
             <div class="face-item">
                 <label>颜值：</label>
                 <span>{{faceData.beauty}}</span>
             </div>
         </scroll-view>
-        <canvas class="drawingCanvas" canvas-id="drawingCanvas" :style="{width:windowWidth+'px',height:windowHeight+'px'}"></canvas>
+        <div class="drawingCanvas" :style="{width:windowWidth+'px',height:windowHeight+'px'}"></div>
     </div>
 </template>
 
@@ -127,33 +127,30 @@
             const windowHeight = wx.getSystemInfoSync().windowHeight;
             this.windowWidth = windowWidth;
             this.windowHeight = windowHeight;
-            drawingCanvas(windowWidth, windowHeight)
         }
-    }
-
-    function drawingCanvas(windowWidth, windowHeight) {
-        let context = wx.createCanvasContext("drawingCanvas");
-        context.drawImage("../static/imgs/bg.jpg", 0, 0);
-        context.fill();
-        context.draw();
     }
 </script>
 
 <style scoped lang="less">
-    .drawingCanvas{
+    .drawingCanvas {
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
         left: 0;
         z-index: -1;
+        background: data-uri("../static/imgs/bg.jpg") no-repeat center;
+        background-size: cover;
     }
-    .data{
-       background: transparent;
-    }
-    body{
+
+    .data {
         background: transparent;
     }
+
+    body {
+        background: transparent;
+    }
+
     .box {
         width: 100%;
         display: flex;
@@ -161,6 +158,7 @@
         justify-content: center;
         box-shadow: 0 0 10px #fdf;
         padding: 15px;
+        box-sizing: border-box;
     }
 
     .photo-btn {
