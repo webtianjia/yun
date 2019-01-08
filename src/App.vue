@@ -3,8 +3,7 @@
   export default {
     mpType: 'app',
     onLaunch: function(options) {
-      // Do something initial when launch.
-      console.log('App onLaunch')
+        wx.cloud.init();
     },
     onShow: function(options) {
       // Do something when show.
@@ -17,11 +16,6 @@
     onError: function(msg) {
       console.log('App onError')
       console.log(msg)
-    },
-    globalData() {
-      return {
-        a: 'I am global data'
-      }
     }
   }
 </script>

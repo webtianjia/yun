@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container"  :style="{width:windowWidth+'px',height:windowHeight+'px'}">
         <div class="photo-btn" @click="chooseImage"></div>
         <scroll-view v-if="faceData" class="data">
             <div class="box">
@@ -34,7 +34,6 @@
                 <span>{{faceData.beauty}}</span>
             </div>
         </scroll-view>
-        <div class="drawingCanvas" :style="{width:windowWidth+'px',height:windowHeight+'px'}"></div>
     </div>
 </template>
 
@@ -102,7 +101,7 @@
                         if (response.data.code === 0) {
                             that.faceData = Object.assign({imgPath}, response.data.data.face[0],);
                         } else {
-                            wx.showToast({title: "请对准人脸哦..", image: "../../../static/imgs/error.png"})
+                            wx.showToast({title: "请对准人脸哦..", image: "../../../static/imgs/error.png",duration:3000})
                         }
                         wx.hideLoading()
                     }
@@ -122,7 +121,6 @@
             }
         },
         created() {
-            wx.cloud.init();
             const windowWidth = wx.getSystemInfoSync().windowWidth;
             const windowHeight = wx.getSystemInfoSync().windowHeight;
             this.windowWidth = windowWidth;
@@ -132,7 +130,7 @@
 </script>
 
 <style scoped lang="less">
-    .drawingCanvas {
+    .container {
         position: fixed;
         top: 0;
         right: 0;
@@ -142,15 +140,6 @@
         background: data-uri("../static/imgs/bg.jpg") no-repeat center;
         background-size: cover;
     }
-
-    .data {
-        background: transparent;
-    }
-
-    body {
-        background: transparent;
-    }
-
     .box {
         width: 100%;
         display: flex;
@@ -160,7 +149,6 @@
         padding: 15px;
         box-sizing: border-box;
     }
-
     .photo-btn {
         position: fixed;
         left: 50%;
