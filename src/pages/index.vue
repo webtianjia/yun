@@ -1,5 +1,11 @@
 <template>
-    <div class="container"  :style="{width:windowWidth+'px',height:windowHeight+'px'}">
+
+    <div class="container" :style="{width:windowWidth+'px',height:windowHeight+'px'}">
+        <wx-header @iconClick="goTo">
+            <div class="span">
+                <div class="eye"></div>
+            </div>
+        </wx-header>
         <div class="photo-btn" @click="chooseImage"></div>
         <scroll-view v-if="faceData" class="data">
             <div class="box">
@@ -38,13 +44,20 @@
 </template>
 
 <script>
+    import wxHeader from "../components/header"
     export default {
         name: "index",
+        components:{
+          wxHeader
+        },
         data() {
             return {
                 faceData: null,
+                fileID: null,
                 windowWidth: 0,
-                windowHeight: 0
+                windowHeight: 0,
+                desc: "",
+                openId: null
             }
         },
         methods: {
@@ -68,6 +81,7 @@
                     cloudPath: "img" + new Date().getTime(),
                     filePath: filePath,
                     success: res => {
+                        that.fileID = res.fileID
                         that.getImgPath(res.fileID)
                     }
                 })
@@ -100,8 +114,9 @@
                     success(response) {
                         if (response.data.code === 0) {
                             that.faceData = Object.assign({imgPath}, response.data.data.face[0],);
+                            that.addImg()
                         } else {
-                            wx.showToast({title: "请对准人脸哦..", image: "../../../static/imgs/error.png",duration:3000})
+                            wx.showToast({title: "请对准人脸哦..", image: "../../../static/imgs/error.png", duration: 3000})
                         }
                         wx.hideLoading()
                     }
@@ -118,28 +133,62 @@
                 }).catch(err => {
                     console.log(err)
                 })
+            },
+            getUserId() {
+                const that = this;
+                wx.cloud.callFunction({
+                    name: 'getUserInfo',
+                }).then(res => {
+                    that.openId = res.openId
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            addImg() {
+                const that = this;
+                const db = wx.cloud.database();
+                db.collection('all_img').add({
+                    data: {
+                        img_author: {
+                            id: that.openId
+                        },
+                        img_path_id: that.fileID,
+                        img_beauty: that.faceData.beauty,
+                        img_gender: that.faceData.gender,
+                        img_age: that.faceData.age,
+                        img_expression: that.faceData.expression,
+                        img_desc: that.desc
+                    },
+                    success(res) {
+
+                    }
+                })
+            },
+            goTo(){
+                wx.navigateTo({
+                    url: "/pages/list/main"
+                });
             }
         },
         created() {
-            const windowWidth = wx.getSystemInfoSync().windowWidth;
-            const windowHeight = wx.getSystemInfoSync().windowHeight;
-            this.windowWidth = windowWidth;
-            this.windowHeight = windowHeight;
+            this.getUserId();
+            this.windowWidth = wx.getSystemInfoSync().windowWidth;
+            this.windowHeight = wx.getSystemInfoSync().windowHeight;
         }
     }
 </script>
 
 <style scoped lang="less">
-    .container {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        background: data-uri("../static/imgs/bg.jpg") no-repeat center;
-        background-size: cover;
-    }
+     .container {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: -1;
+          background: data-uri("../static/imgs/bg.jpg") no-repeat center;
+          background-size: cover;
+      }
     .box {
         width: 100%;
         display: flex;
@@ -148,6 +197,9 @@
         box-shadow: 0 0 10px #fdf;
         padding: 15px;
         box-sizing: border-box;
+    }
+    .data{
+        padding-top:88px ;
     }
     .photo-btn {
         position: fixed;
@@ -195,4 +247,31 @@
             transform: scale(1.1);
         }
     }
+
+     .eye{
+         width: 20px;
+         height: 20px;
+         background-color: rgba(255,255,255,0.8);
+         border-radius: 50%;
+         box-shadow: 30px 0px 0px 0px rgba(255,255,255,0.8);
+         position: relative;
+         margin: 36px 26px;
+     }
+
+     .eye:after{
+         background-color: #59488b;
+         width: 10px;
+         height: 10px;
+         box-shadow: 30px 0px 0px 0px #59488b;
+         border-radius: 50%;
+         left: 9px;
+         top: 8px;
+         position: absolute;
+         content: "";
+         animation: eyeball 2s linear infinite alternate;
+     }
+     @keyframes eyeball{
+         0%{left: 9px;}
+         100%{left: 1px;}
+     }
 </style>
