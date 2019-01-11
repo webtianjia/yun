@@ -21,15 +21,28 @@
 </template>
 
 <script>
-    import wxHeader from "../components/header"
+    import wxHeader from "../../components/header"
+
     export default {
         name: "faceList",
-        components:{
+        components: {
             wxHeader
         },
         data() {
             return {
-                list: null
+                list: [],
+                param: {
+                    pageSize: 5,
+                    pageIndex: 1,
+                },
+                total: 0
+            }
+        },
+        computed: {
+            isNoDataBottom: () => {
+                if (this.total) {
+                    return (parseInt(this.total / this.param.pageSize) + 1) <= this.param.pageIndex;
+                }
             }
         },
         methods: {
@@ -44,38 +57,49 @@
                     success: res => {
                         for (let i = 0; i < list.length; i++) {
                             if (list[i].img_path_id === res.fileList[i].fileID) {
-                                console.log(list[i].img_path_id, res.fileList[i].fileID)
                                 list[i].tempFileURL = res.fileList[i].tempFileURL
                             }
                         }
-                        that.list = list
+                        that.list.push(list)
                     }
                 })
             },
             getAllImg() {
-                const db = wx.cloud.database();
                 const that = this;
-                db.collection('all_img').get({
-                    success(res) {
-                        that.getImgPath(res.data);
+                wx.cloud.callFunction({
+                    name: 'paginator',
+                    data: {
+                        "dbName": "all_img",
+                        "pageIndex": that.param.pageIndex,
+                        "pageSize": that.param.pageSize
                     }
+                }).then(res => {
+                    that.total = res.result.total;
+                    that.getImgPath(res.result.data)
+                }).catch(err => {
+                    console.log(err)
                 })
             },
         },
         filters: {
             sex(value) {
                 let text;
-                if(value < 45){
-                    text= "女";
-                }else if(value >= 45 && value <= 55){
-                    text= "中性";
-                }else {
-                    text= "男";
+                if (value <= 49) {
+                    text = "女";
+                } else if (value >= 50 && value <= 51) {
+                    text = "中性";
+                } else {
+                    text = "男";
                 }
                 return text
             }
         },
         created() {
+            this.getAllImg()
+        },
+        onReachBottom() {
+            if (this.isNoDataBottom) return;
+            this.param.pageIndex++;
             this.getAllImg()
         }
     }
@@ -97,7 +121,7 @@
     }
 
     .card {
-        height:100%;
+        height: 100%;
         overflow: auto;
         border-radius: 3px;
         padding: 2%;

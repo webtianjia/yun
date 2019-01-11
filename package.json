@@ -38,6 +38,7 @@
     "@megalo/vhtml-plugin": "^0.1.0",
     "crypto-js": "^3.1.9-1",
     "megalo": "^0.5.2",
-    "octoparse": "^0.2.0"
+    "octoparse": "^0.2.0",
+    "underscore": "^1.9.1"
   }
 }

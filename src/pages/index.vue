@@ -139,7 +139,7 @@
                 wx.cloud.callFunction({
                     name: 'getUserInfo',
                 }).then(res => {
-                    that.openId = res.openId
+                    that.openId = res.result.openid
                 }).catch(err => {
                     console.log(err)
                 })
@@ -158,9 +158,6 @@
                         img_age: that.faceData.age,
                         img_expression: that.faceData.expression,
                         img_desc: that.desc
-                    },
-                    success(res) {
-
                     }
                 })
             },
