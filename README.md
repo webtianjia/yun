@@ -1,9 +1,3 @@
-# megalo 小程序项目
-megalo 
-## 描述
-
-a megalo project
-
 ## 作者
 
 tianjia <tianjia@xiuex.com>
@@ -15,15 +9,4 @@ tianjia <tianjia@xiuex.com>
 ```bash
 npm run dev:wechat
 ```
-
-支付宝小程序：
-
-```bash
-npm run dev:alipay
-```
-
-百度智能小程序：
-
-```bash
-npm run dev:swan
-```
+## 微信搜索小程序 颜值巅峰
