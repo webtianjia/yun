@@ -9,4 +9,5 @@ tianjia <tianjia@xiuex.com>
 ```bash
 npm run dev:wechat
 ```
-## 微信搜索小程序 颜值巅峰
+## 微信搜索小程序 
+颜值巅峰
